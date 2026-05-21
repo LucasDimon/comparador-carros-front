@@ -7,27 +7,20 @@ import Historico from './pages/Historico';
 function App() {
   return (
     <BrowserRouter>
-      {/* Barra de Navegação Moderna */}
-      <nav style={navStyles.navbar}>
-        <div style={navStyles.container}>
-          <Link to="/" style={navStyles.logo}>🏎️ AutoCompare</Link>
-          <div style={navStyles.links}>
-            <Link to="/" style={navStyles.link}>Home</Link>
-            <Link to="/historico" style={navStyles.link}>Histórico</Link>
-            <Link to="/login" style={navStyles.button}>Entrar</Link>
-          </div>
-        </div>
+      {/* Menu de Navegação Provisório */}
+      <nav style={{ padding: '10px', background: '#222', marginBottom: '20px' }}>
+        <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
+        <Link to="/login" style={{ marginRight: '10px' }}>Login</Link>
+        <Link to="/historico" style={{ marginRight: '10px' }}>Histórico</Link>
       </nav>
 
-      {/* Conteúdo das Rotas */}
-      <main style={navStyles.main}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/comparacao" element={<Comparacao />} />
-          <Route path="/historico" element={<Historico />} />
-        </Routes>
-      </main>
+      {/* Configuração das Rotas */}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} /> 
+        <Route path="/comparacao" element={<Comparacao />} />
+        <Route path="/historico" element={<Historico />} />
+      </Routes>
     </BrowserRouter>
   );
 }
