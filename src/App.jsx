@@ -8,7 +8,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* Menu de Navegação Provisório */}
-      <nav style={{ padding: '10px', background: '#eee', marginBottom: '20px' }}>
+      <nav style={{ padding: '10px', background: '#222', marginBottom: '20px' }}>
         <Link to="/" style={{ marginRight: '10px' }}>Home</Link>
         <Link to="/login" style={{ marginRight: '10px' }}>Login</Link>
         <Link to="/historico" style={{ marginRight: '10px' }}>Histórico</Link>
@@ -17,7 +17,7 @@ function App() {
       {/* Configuração das Rotas */}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} /> 
         <Route path="/comparacao" element={<Comparacao />} />
         <Route path="/historico" element={<Historico />} />
       </Routes>

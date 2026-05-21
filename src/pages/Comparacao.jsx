@@ -1,137 +1,105 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 export default function Comparacao() {
   const location = useLocation();
-  const navigate = useNavigate();
+  // Captura os carros passados através da navegação
+  const carros = location.state?.carrosParaComparar || [];
 
-  // Recupera os carros passados pela tela Home através do estado da rota
-  const { carros } = location.state || { carros: [] };
-
-  // Caso o usuário tente acessar a URL diretamente sem escolher os carros,
-  // exibimos um aviso e um botão para voltar.
-  if (!carros || carros.length < 2) {
+  // Se o usuário entrou direto na URL sem escolher carros
+  if (carros.length !== 2) {
     return (
-      <div style={styles.containerErro}>
-        <h2>Nenhum veículo selecionado para comparação</h2>
+      <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', color: '#000', textAlign: 'center' }}>
+        <h2>Nenhum carro selecionado para comparação!</h2>
         <p>Volte para a página inicial e escolha 2 carros.</p>
-        <button onClick={() => navigate('/')} style={styles.botaoVoltar}>
-          Ir para o Catálogo
-        </button>
+        <Link to="/" style={{ padding: '10px 20px', backgroundColor: '#0275d8', color: '#fff', textDecoration: 'none', borderRadius: '5px', fontWeight: 'bold' }}>
+          Voltar para a Home
+        </Link>
       </div>
     );
   }
 
   const [carro1, carro2] = carros;
 
-  // Função auxiliar para formatar preço monetário
-  const formatarPreco = (valor) => {
-    return valor ? valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: 0 }) : 'N/A';
-  };
+  // Descobre qual tem mais cavalos para destacar
+  const maisPotenteId = carro1.cv > carro2.cv ? carro1.id : carro2.cv > carro1.cv ? carro2.id : null;
 
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <button onClick={() => navigate('/')} style={styles.botaoLinkVoltar}>
-          ← Voltar para o Catálogo
-        </button>
-        <h1 style={styles.titulo}>Comparação Detalhada</h1>
-        <p style={styles.subtitulo}>Análise lado a lado das especificações técnicas.</p>
-      </header>
-
-      {/* Cabeçalho Visual (Fotos e Nomes dos Carros) */}
-      <div style={styles.gridCarros}>
-        <div style={styles.colunaCarroVisual}>
-          <img src={carro1.imagem} alt={carro1.modelo} style={styles.imagem} />
-          <h2 style={styles.nomeCarro}>{carro1.modelo}</h2>
-        </div>
-        
-        <div style={styles.vsContainer}>
-          <span style={styles.vsBadge}>VS</span>
-        </div>
-
-        <div style={styles.colunaCarroVisual}>
-          <img src={carro2.imagem} alt={carro2.modelo} style={styles.imagem} />
-          <h2 style={styles.nomeCarro}>{carro2.modelo}</h2>
-        </div>
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif', color: '#000000', maxWidth: '900px', margin: '0 auto' }}>
+      
+      <div style={{ marginBottom: '20px' }}>
+        <Link to="/" style={{ textDecoration: 'none', color: '#0275d8', fontWeight: 'bold' }}>
+          ⬅️ Voltar para o Catálogo
+        </Link>
       </div>
 
-      {/* Tabela de Ficha Técnica Completa */}
-      <div style={styles.tabelaContainer}>
-        <table style={styles.tabela}>
-          <thead>
-            <tr>
-              <th style={styles.th}>Especificação</th>
-              <th style={styles.th}>{carro1.modelo}</th>
-              <th style={styles.th}>{carro2.modelo}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style={styles.linha}>
-              <td style={styles.celulaPropriedade}>Preço Estimado</td>
-              <td style={{ ...styles.celulaDado, color: '#00e676', fontWeight: 'bold' }}>{formatarPreco(carro1.precio_num)}</td>
-              <td style={{ ...styles.celulaDado, color: '#00e676', fontWeight: 'bold' }}>{formatarPreco(carro2.precio_num)}</td>
-            </tr>
-            <tr style={styles.linhaAlternada}>
-              <td style={styles.celulaPropriedade}>Motorização</td>
-              <td style={styles.celulaDado}>{carro1.motor}</td>
-              <td style={styles.celulaDado}>{carro2.motor}</td>
-            </tr>
-            <tr style={styles.linha}>
-              <td style={styles.celulaPropriedade}>Potência Máxima</td>
-              <td style={styles.celulaDado}>{carro1.cv} cv</td>
-              <td style={styles.celulaDado}>{carro2.cv} cv</td>
-            </tr>
-            <tr style={styles.linhaAlternada}>
-              <td style={styles.celulaPropriedade}>Torque</td>
-              {/* Simulando dados adicionais que virão do banco futuramente */}
-              <td style={styles.celulaDado}>{carro1.id === 1 ? '66,3 kgfm' : carro1.id === 2 ? '81,6 kgfm' : '54,0 kgfm'}</td>
-              <td style={styles.celulaDado}>{carro2.id === 1 ? '66,3 kgfm' : carro2.id === 2 ? '81,6 kgfm' : '54,0 kgfm'}</td>
-            </tr>
-            <tr style={styles.linha}>
-              <td style={styles.celulaPropriedade}>Aceleração (0-100 km/h)</td>
-              <td style={styles.celulaDado}>{carro1.id === 1 ? '3,9s' : carro1.id === 2 ? '3,6s' : '3,7s'}</td>
-              <td style={styles.celulaDado}>{carro2.id === 1 ? '3,9s' : carro2.id === 2 ? '3,6s' : '3,7s'}</td>
-            </tr>
-            <tr style={styles.linhaAlternada}>
-              <td style={styles.celulaPropriedade}>Tipo de Tração</td>
-              <td style={styles.celulaDado}>{carro1.tracao || 'Traseira'}</td>
-              <td style={styles.celulaDado}>{carro2.tracao || 'Traseira'}</td>
-            </tr>
-            <tr style={styles.linha}>
-              <td style={styles.celulaPropriedade}>Transmissão / Câmbio</td>
-              <td style={styles.celulaDado}>{carro1.id === 3 ? 'PDK 8 marchas' : 'Automático 8 marchas'}</td>
-              <td style={styles.celulaDado}>{carro2.id === 3 ? 'PDK 8 marchas' : 'Automático 8 marchas'}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h1 style={{ textAlign: 'center', marginBottom: '30px' }}>⚖️ Comparação de Veículos</h1>
+
+      {/* TABELA COMPARATIVA */}
+      <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: '#ffffff', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#f2f2f2' }}>
+            <th style={{ padding: '15px', borderBottom: '2px solid #ddd', width: '30%', color: '#000' }}>Atributo</th>
+            <th style={{ padding: '15px', borderBottom: '2px solid #ddd', width: '35%', color: '#000' }}>{carro1.modelo}</th>
+            <th style={{ padding: '15px', borderBottom: '2px solid #ddd', width: '35%', color: '#000' }}>{carro2.modelo}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Linha das Imagens */}
+          <tr>
+            <td style={{ padding: '15px', fontWeight: 'bold', borderBottom: '1px solid #eee' }}>Visual</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', textAlign: 'center' }}>
+              <img src={carro1.imagem} alt={carro1.modelo} style={{ width: '100%', maxHeight: '180px', objectFit: 'cover', borderRadius: '4px' }} />
+            </td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', textAlign: 'center' }}>
+              <img src={carro2.imagem} alt={carro2.modelo} style={{ width: '100%', maxHeight: '180px', objectFit: 'cover', borderRadius: '4px' }} />
+            </td>
+          </tr>
+
+          {/* Linha do Motor */}
+          <tr>
+            <td style={{ padding: '15px', fontWeight: 'bold', borderBottom: '1px solid #eee' }}>Motorização</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#000' }}>{carro1.motor}</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#000' }}>{carro2.motor}</td>
+          </tr>
+
+          {/* Linha da Potência (Com Destaque) */}
+          <tr>
+            <td style={{ padding: '15px', fontWeight: 'bold', borderBottom: '1px solid #eee' }}>Potência (CV)</td>
+            <td style={{ 
+              padding: '15px', borderBottom: '1px solid #eee', color: '#000',
+              backgroundColor: maisPotenteId === carro1.id ? '#e2f0d9' : 'transparent',
+              fontWeight: maisPotenteId === carro1.id ? 'bold' : 'normal'
+            }}>
+              {carro1.cv} cv {maisPotenteId === carro1.id && '🏆 (Mais Potente)'}
+            </td>
+            <td style={{ 
+              padding: '15px', borderBottom: '1px solid #eee', color: '#000',
+              backgroundColor: maisPotenteId === carro2.id ? '#e2f0d9' : 'transparent',
+              fontWeight: maisPotenteId === carro2.id ? 'bold' : 'normal'
+            }}>
+              {carro2.cv} cv {maisPotenteId === carro2.id && '🏆 (Mais Potente)'}
+            </td>
+          </tr>
+
+          {/* Linha da Tração */}
+          <tr>
+            <td style={{ padding: '15px', fontWeight: 'bold', borderBottom: '1px solid #eee' }}>Tipo de Tração</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#000' }}>{carro1.tracao}</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#000' }}>{carro2.tracao}</td>
+          </tr>
+
+          {/* Linha do Preço */}
+          <tr>
+            <td style={{ padding: '15px', fontWeight: 'bold', borderBottom: '1px solid #eee' }}>Investimento</td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#28a745', fontWeight: 'bold' }}>
+              R$ {carro1.precio_num?.toLocaleString('pt-BR')}
+            </td>
+            <td style={{ padding: '15px', borderBottom: '1px solid #eee', color: '#28a745', fontWeight: 'bold' }}>
+              R$ {carro2.precio_num?.toLocaleString('pt-BR')}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
-
-const styles = {
-  container: { padding: '40px 20px', maxWidth: '1100px', margin: '0 auto' },
-  containerErro: { textAlign: 'center', marginTop: '100px', padding: '20px' },
-  botaoVoltar: { background: '#007bff', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', marginTop: '20px' },
-  
-  header: { marginBottom: '40px', position: 'relative' },
-  botaoLinkVoltar: { background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', fontSize: '16px', fontWeight: 'bold', padding: 0, marginBottom: '15px' },
-  titulo: { fontSize: '32px', margin: '10px 0 5px 0' },
-  subtitulo: { color: '#aaa', fontSize: '16px', margin: 0 },
-
-  gridCarros: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px', marginBottom: '50px' },
-  colunaCarroVisual: { flex: 1, textBreak: 'break-word', textAlign: 'center', background: '#1a1a1a', padding: '20px', borderRadius: '12px', border: '1px solid #333' },
-  imagem: { width: '100%', height: '220px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' },
-  nomeCarro: { fontSize: '22px', margin: 0, color: '#fff' },
-  
-  vsContainer: { display: 'flex', justifyContent: 'center', alignItems: 'center' },
-  vsBadge: { background: '#ff3d00', color: '#fff', padding: '10px 15px', borderRadius: '50%', fontWeight: 'bold', fontSize: '14px', boxShadow: '0 0 15px rgba(255, 61, 0, 0.4)' },
-
-  tabelaContainer: { background: '#1a1a1a', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden' },
-  tabela: { width: '100%', borderCollapse: 'collapse', textAlign: 'left' },
-  th: { padding: '18px', background: '#262626', color: '#fff', fontSize: '16px', borderBottom: '2px solid #333' },
-  linha: { background: '#1a1a1a', borderBottom: '1px solid #262626' },
-  linhaAlternada: { background: '#222222', borderBottom: '1px solid #262626' },
-  celulaPropriedade: { padding: '16px', color: '#aaa', fontWeight: 'bold', width: '30%' },
-  celulaDado: { padding: '16px', color: '#fff' }
-};
